@@ -57,6 +57,14 @@ class ApiRegressionTest {
     }
     JsonNode data(MvcResult result) throws Exception { return json.readTree(result.getResponse().getContentAsString()); }
 
+    @Test void hostingRoutesArePublicButApiDataRemainsProtected() throws Exception {
+        mvc.perform(get("/health")).andExpect(status().isOk()).andExpect(jsonPath("$.status").value("ok"));
+        for(String path:List.of("/candidate/login","/candidate/register","/hr/login","/hr/register","/admin","/admin/login"))
+            mvc.perform(get(path)).andExpect(status().isOk()).andExpect(forwardedUrl("/index.html"));
+        for(String path:List.of("/api/admin/accounts","/api/hr/jobs","/api/candidate/applications"))
+            mvc.perform(get(path)).andExpect(status().isUnauthorized());
+    }
+
     @Test void sameUsernameWithThreeDifferentPasswordsOnlyOpensItsOwnWorkspace() throws Exception {
         String username="three-roles-"+UUID.randomUUID();
         var passwords=Map.of("CANDIDATE","CandidateOnly@2026!","HR","HrOnly@2026!","ADMIN","AdminOnly@2026!");

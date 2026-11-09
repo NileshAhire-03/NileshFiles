@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: careerpath-ai
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: DB_URL
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: ADMIN_USERNAME
+        value: admin
+      - key: ADMIN_PASSWORD
+        sync: false
+      # Bootstrap the new empty cloud schema; switch to validate after first deploy.
+      - key: DDL_AUTO
+        value: update
+      - key: SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE
+        value: 5
+      - key: SPRING_DATASOURCE_HIKARI_MINIMUM_IDLE
+        value: 0
+      - key: SPRING_DATASOURCE_HIKARI_MAX_LIFETIME
+        value: 300000

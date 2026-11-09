@@ -1,0 +1,12 @@
+.git
+.github
+.runtime
+**/.env
+**/.env.*
+**/node_modules
+**/target
+**/dist
+**/data
+**/*.log
+**/*.sql
+**/*.dump
